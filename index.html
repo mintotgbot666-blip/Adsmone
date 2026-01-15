@@ -9,75 +9,20 @@
     <script src='https://telegram.org/js/telegram-web-app.js' type='text/javascript'/>
 
     <b:skin><![CDATA[
-        body { 
-            background: #f0f2f5; 
-            color: #1c1e21; 
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif; 
-            margin: 0; padding: 20px 0 100px 0;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        /* Premium Dashboard Card */
-        .dashboard-card {
-            width: 90%; max-width: 400px;
-            background: #ffffff; border-radius: 12px;
-            padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-        }
+        body { background: #f0f2f5; color: #1c1e21; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px 0 100px 0; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Dashboard Box - Premium Style */
+        .dashboard-card { width: 90%; max-width: 400px; background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 25px; border: 1px solid #e4e6eb; }
         .dash-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .dash-row:last-child { margin-bottom: 0; }
         .stat-box { flex: 1; }
         .label { font-size: 11px; color: #65676b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .value { font-size: 18px; font-weight: 700; display: block; margin-top: 2px; }
         .timer { color: #d63031; }
-        .cpm { color: #2ecc71; }
 
-        .profile-wrap { text-align: center; margin-bottom: 25px; }
-        .avatar { 
-            width: 75px; height: 75px; border-radius: 50%; 
-            border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .name { font-size: 16px; font-weight: 600; margin-top: 8px; color: #4b4f56; }
-
-        .control-panel {
-            width: 90%; max-width: 400px;
-            background: #ffffff; border-radius: 12px;
-            padding: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-        }
-        .action-btn {
-            background: #f0f2f5; border: none; padding: 20px 10px;
-            border-radius: 8px; cursor: pointer; transition: 0.2s;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; font-size: 13px; font-weight: 600; color: #1c1e21;
-        }
-        .action-btn:active { background: #e4e6eb; transform: scale(0.96); }
+        .control-panel { width: 90%; max-width: 400px; background: #ffffff; border-radius: 12px; padding: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .action-btn { background: #f0f2f5; border: none; padding: 20px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: #1c1e21; }
         .primary { background: #0084ff; color: #fff; grid-column: span 2; padding: 15px; font-size: 15px; }
-        .primary:active { background: #0073e6; }
-        
-        .icon { font-size: 20px; margin-bottom: 5px; }
-
-        .ref-bar {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #fff; border-top: 1px solid #ddd;
-            padding: 15px 20px; display: flex; align-items: center;
-            justify-content: space-between; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 10;
-        }
-        .ref-info { flex: 1; overflow: hidden; margin-right: 15px; }
-        .ref-link-text { 
-            font-size: 11px; color: #0084ff; white-space: nowrap; 
-            overflow: hidden; text-overflow: ellipsis; display: block;
-        }
-        .share-btn { 
-            background: #2ecc71; color: white; border: none; 
-            padding: 8px 15px; border-radius: 6px; font-size: 12px; 
-            font-weight: 700; cursor: pointer; 
-        }
-
-        #modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:100; align-items:center; justify-content:center; }
-        .m-box { background:white; width:85%; max-width:350px; padding:25px; border-radius:15px; text-align:center; }
-        input { width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px; box-sizing:border-box; }
+        .primary:disabled { background: #bcc0c4; cursor: not-allowed; }
     ]]></b:skin>
 </head>
 
@@ -93,100 +38,65 @@
                 <span class='value timer' id='rest-timer'>00:00:00</span>
             </div>
         </div>
-        <div class='dash-row' style='padding-top: 10px; border-top: 1px solid #f0f2f5;'>
+        <div class='dash-row' style='margin-bottom:0; padding-top:10px; border-top:1px solid #eee;'>
             <div class='stat-box'>
-                <span class='label'>Current CPM</span>
-                <span class='value cpm'>$<span id='cpm-display'>0.00</span></span>
+                <span class='label'>Hourly Limit</span>
+                <span class='value' style='font-size:14px;'><span id='h-count'>0</span> / 20</span>
             </div>
             <div class='stat-box' style='text-align: right;'>
-                <span class='label'>Status</span>
-                <span class='value' style='color:#0084ff; font-size:14px;'>Authorized</span>
+                <span class='label'>Safety Status</span>
+                <span class='value' id='status-text' style='color:#2ecc71; font-size:14px;'>Secure</span>
             </div>
         </div>
-    </div>
-
-    <div class='profile-wrap'>
-        <img class='avatar' id='user-img' onclick='triggerFile()' src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'/>
-        <div class='name' id='user-name-display' onclick='editName()'>Nexus User</div>
     </div>
 
     <div class='control-panel'>
-        <button class='action-btn primary' onclick='playAd()'>
-            <span>Watch Advertisement</span>
-        </button>
-        
-        <button class='action-btn' onclick='openWithdraw()'>
-            <span class='icon'>💰</span> Withdraw
-        </button>
-        <button class='action-btn' onclick='alert(&quot;Coming Soon&quot;)'>
-            <span class='icon'>📜</span> History
-        </button>
-        <button class='action-btn' onclick='window.open(&quot;https://wa.me/8801XXXXXXXXX&quot;)'>
-            <span class='icon'>🎧</span> Support
-        </button>
-        <button class='action-btn' onclick='editName()'>
-            <span class='icon'>&#9881;&#65039;</span> Settings
-        </button>
+        <button class='action-btn primary' id='watch-btn' onclick='playAd()'>Watch Advertisement</button>
+        <button class='action-btn' onclick='openWithdraw()'>💰 Withdraw</button>
+        <button class='action-btn' onclick='alert("Coming Soon")'>📜 History</button>
     </div>
-
-    <div class='ref-bar'>
-        <div class='ref-info'>
-            <span class='label' style='margin-bottom:2px'>Your Referral Link</span>
-            <span class='ref-link-text' id='ref-link-display'>https://t.me/YourBot?start=user</span>
-        </div>
-        <button class='share-btn' onclick='shareRef()'>Invite</button>
-    </div>
-
-    <div id='modal'>
-        <div class='m-box'>
-            <h3 style='margin:0 0 15px 0'>Payment Center</h3>
-            <input id='pay-address' placeholder='Enter Account Info' type='text'/>
-            <button class='action-btn primary' onclick='submitWithdraw()' style='width:100%'>Request Payout</button>
-            <p onclick='closeWithdraw()' style='margin-top:15px; font-size:13px; color:#65676b; cursor:pointer;'>Back to Home</p>
-        </div>
-    </div>
-
-    <input accept='image/*' id='file-input' onchange='handleFile(event)' style='display:none;' type='file'/>
-    <div style='display:none !important;'><b:section id='main-layout'/></div>
 
     <script type='text/javascript'>
     // <![CDATA[
         const tg = window.Telegram.WebApp;
-        let data = { ads: 0, cpm: 0, name: "Nexus User", photo: "", lastResetDate: "" };
+        let data = { ads: 0, hourly: 0, lastHour: new Date().getHours(), lastResetDate: "" };
 
         const saved = localStorage.getItem('pro_bot_v2');
-        if(saved) data = {...data, ...JSON.parse(saved)};
+        if(saved) data = JSON.parse(saved);
 
         function updateUI() {
-            document.getElementById('p-count').innerText = data.ads;
-            document.getElementById('cpm-display').innerText = data.cpm.toFixed(2);
-            document.getElementById('user-name-display').innerText = data.name;
-            if(data.photo) document.getElementById('user-img').src = data.photo;
-            
-            const cleanName = data.name.replace(/\s+/g, '_');
-            const refLink = `https://t.me/AdBot?start=${cleanName}`;
-            document.getElementById('ref-link-display').innerText = refLink;
+            // Check if hour changed to reset hourly limit
+            const currentHour = new Date().getHours();
+            if (data.lastHour !== currentHour) {
+                data.hourly = 0;
+                data.lastHour = currentHour;
+            }
 
+            document.getElementById('p-count').innerText = data.ads;
+            document.getElementById('h-count').innerText = data.hourly;
+            
+            const btn = document.getElementById('watch-btn');
+            const status = document.getElementById('status-text');
+
+            if (data.hourly >= 20 || data.ads >= 100) {
+                btn.disabled = true;
+                btn.innerText = "Limit Reached";
+                status.innerText = "Resting";
+                status.style.color = "#d63031";
+            } else {
+                btn.disabled = false;
+                btn.innerText = "Watch Advertisement";
+                status.innerText = "Secure";
+                status.style.color = "#2ecc71";
+            }
             localStorage.setItem('pro_bot_v2', JSON.stringify(data));
         }
 
-        /* --- ADSMONE REWARD LOGIC --- */
         function playAd() {
             if (typeof window.showAdsmone === 'function') {
-                window.showAdsmone()
-                    .then(() => { 
-                        // ✅ User watched the full ad
-                        data.ads++; 
-                        updateUI(); 
-                        tg.HapticFeedback.impactOccurred('medium');
-                    })
-                    .catch((e) => {
-                        // ❌ Handle errors or ad dismissal
-                        console.error("Adsmone Error:", e);
-                        alert("Ad not available or closed early.");
-                    });
-            } else {
-                alert("Ad SDK is still loading. Please wait...");
+                window.showAdsmone().then(() => { 
+                    data.ads++; data.hourly++; updateUI(); 
+                }).catch(() => { alert("Ad closed early."); });
             }
         }
 
@@ -195,36 +105,13 @@
             const bd = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Dhaka"}));
             let target = new Date(bd); target.setHours(10, 0, 0, 0);
             if (bd >= target && data.lastResetDate !== bd.toDateString()) {
-                data.ads = 0; data.lastResetDate = bd.toDateString(); updateUI();
+                data.ads = 0; data.hourly = 0; data.lastResetDate = bd.toDateString(); updateUI();
             }
             if(bd >= target) target.setDate(target.getDate() + 1);
             const diff = target - bd;
             const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
             document.getElementById('rest-timer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
         }
-
-        function shareRef() {
-            const link = document.getElementById('ref-link-display').innerText;
-            const text = encodeURIComponent("Join me on this Ad Bot and start earning! " + link);
-            window.open(`https://t.me/share/url?url=${link}&text=${text}`);
-        }
-
-        function openWithdraw() { document.getElementById('modal').style.display = 'flex'; }
-        function closeWithdraw() { document.getElementById('modal').style.display = 'none'; }
-        
-        function submitWithdraw() {
-            const address = document.getElementById('pay-address').value;
-            if(!address) return;
-            window.open(`https://wa.me/8801784321922?text=Withdrawal%20Request%20for%20${data.name}`, '_blank');
-        }
-
-        function triggerFile() { document.getElementById('file-input').click(); }
-        function handleFile(e) { 
-            const r = new FileReader(); 
-            r.onload = () => { data.photo = r.result; updateUI(); }; 
-            r.readAsDataURL(e.target.files[0]); 
-        }
-        function editName() { let n = prompt("Enter New Identity:", data.name); if(n) { data.name = n; updateUI(); } }
 
         updateUI();
         setInterval(runTimer, 1000);
